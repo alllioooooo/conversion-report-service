@@ -11,6 +11,8 @@ services:
       - "5432:5432"
     networks:
       - conversion-net
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d conversion_db" ]
       interval: 5s
@@ -96,3 +98,4 @@ networks:
 
 volumes:
   conversion-kafka-data:
+  pgdata:
