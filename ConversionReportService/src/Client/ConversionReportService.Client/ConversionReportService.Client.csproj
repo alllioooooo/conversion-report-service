@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="12.0.0"/>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
+        <PackageReference Include="Grpc.Core.Api" Version="2.71.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.3"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.3"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Application\ConversionReportService.Application.Abstractions\ConversionReportService.Application.Abstractions.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\ConversionReportService.Infrastructure.Kafka\ConversionReportService.Infrastructure.Kafka.csproj"/>
+        <ProjectReference Include="..\..\Presentation\ConversionReportService.Presentation.Grpc\ConversionReportService.Presentation.Grpc.csproj"/>
+    </ItemGroup>
+
+</Project>

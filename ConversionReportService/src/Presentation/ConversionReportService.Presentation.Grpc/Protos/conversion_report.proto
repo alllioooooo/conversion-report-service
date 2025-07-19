@@ -1,0 +1,25 @@
+syntax = "proto3";
+package conversionreport;
+
+option csharp_namespace = "ConversionReportService.Grpc";
+
+service ConversionReportService {
+  rpc GetReport(GetReportRequest) returns (GetReportResponse);
+}
+
+message GetReportRequest {
+  int64 registration_id = 1;
+}
+
+enum ReportCreationStatus {
+  PENDING = 0;
+  PROCESSING = 1;
+  DONE = 2;
+  CANCELLED = 3;
+}
+
+message GetReportResponse {
+  ReportCreationStatus status = 1;
+  double ratio = 2;
+  int64 payed_amount = 3;
+}

@@ -1,0 +1,98 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: conversion-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: conversion_db
+    ports:
+      - "5432:5432"
+    networks:
+      - conversion-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d conversion_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: conversion-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - conversion-net
+
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    platform: linux/amd64
+    container_name: conversion-zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
+    networks:
+      - conversion-net
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    platform: linux/amd64
+    container_name: conversion-kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: conversion-zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://conversion-kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_CREATE_TOPICS: "conversion-reports:1:1"
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    volumes:
+      - conversion-kafka-data:/kafka
+    depends_on:
+      - zookeeper
+    networks:
+      - conversion-net
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: conversion-kafka-ui
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: conversion-kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - conversion-net
+
+  conversionreportservice:
+    build:
+      context: ./src/ConversionReportService
+      dockerfile: Dockerfile
+    container_name: conversionreportservice
+    restart: always
+    ports:
+      - "5141:5141"
+      - "5002:5002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      redis:
+        condition: service_started
+    networks:
+      - conversion-net
+
+networks:
+  conversion-net:
+    driver: bridge
+
+volumes:
+  conversion-kafka-data:

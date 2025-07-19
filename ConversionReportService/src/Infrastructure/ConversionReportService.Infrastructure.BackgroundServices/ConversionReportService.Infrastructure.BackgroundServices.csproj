@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentMigrator.Runner.Core" Version="7.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
+      <PackageReference Include="Npgsql" Version="9.0.3" />
+      <PackageReference Include="Polly" Version="8.6.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Application\ConversionReportService.Application.Abstractions\ConversionReportService.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Application\ConversionReportService.Application.Contracts\ConversionReportService.Application.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>
